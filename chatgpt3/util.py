@@ -2,7 +2,7 @@ import requests
 
 class ChatGPT3:
     """
-    Class to interact with OpenAI's ChatGPT-3 model via API.
+    Kelas untuk mengakses model ChatGPT-3 dari OpenAI melalui API.
     """
     def __init__(self, 
                  api_key,
@@ -31,11 +31,11 @@ class ChatGPT3:
         
         if response.status_code == 200:
             output = response.json()
-            # Check if 'choices' key exists and if it has the expected content
+            # Cek apakah 'choices' ada dan memiliki konten yang diharapkan
             if 'choices' in output and len(output['choices']) > 0:
                 print(output['choices'][0]['text'])
             else:
-                print("Unexpected response format:", output)
+                print("Format respons tidak terduga:", output)
         else:
             print(f"Error: {response.status_code}, {response.text}")
 
@@ -55,9 +55,9 @@ class ChatGPT3:
             if 'choices' in output and len(output['choices']) > 0:
                 self.context = output['choices'][0]['text']
                 print(self.context)
-                exec(self.context, globals())  # Be careful with exec for security reasons
+                exec(self.context, globals())  # Berhati-hati dengan exec untuk alasan keamanan
             else:
-                print("Unexpected response format:", output)
+                print("Format respons tidak terduga:", output)
         else:
             print(f"Error: {response.status_code}, {response.text}")
 
