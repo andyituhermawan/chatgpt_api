@@ -2,15 +2,15 @@ import requests
 
 class ChatGPT3:
     """
-    Kelas untuk mengakses model ChatGPT-3 dari OpenAI melalui API.
+    class untuk akses ChatGPT3 via API
     """
     def __init__(self, 
                  api_key,
-                 model="text-davinci-003",
+                 model="gpt-3.5-turbo",  # gunakan model terbaru
                  max_tokens=1000,
                  temperature=0.1):
 
-        self.url = "https://api.openai.com/v1/completions"
+        self.url = "https://api.openai.com/v1/chat/completions"
         self.model = model
         self.max_tokens = max_tokens
         self.temperature = temperature
@@ -21,43 +21,44 @@ class ChatGPT3:
         }
 
     def ngobrol(self, text):
-        data = { 
+        data = {
             "model": self.model,
-            "prompt": text,
+            "messages": [{"role": "user", "content": text}],  # sesuaikan dengan format API chat terbaru
             "max_tokens": self.max_tokens,
             "temperature": self.temperature
         }
         response = requests.post(self.url, headers=self.headers, json=data)
+        response_json = response.json()
         
+        # Cek respons dari API dan tangani kesalahan
         if response.status_code == 200:
-            output = response.json()
-            # Cek apakah 'choices' ada dan memiliki konten yang diharapkan
-            if 'choices' in output and len(output['choices']) > 0:
-                print(output['choices'][0]['text'])
+            if 'choices' in response_json and len(response_json['choices']) > 0:
+                output = response_json['choices'][0]['message']['content']
+                print(output)
             else:
-                print("Format respons tidak terduga:", output)
+                print("Respons tidak mengandung 'choices':", response_json)
         else:
             print(f"Error: {response.status_code}, {response.text}")
 
     def ngoding(self, text):
         if self.context is not None:
             text = f"dari kode : \n {self.context} \n " + text
-        data = { 
+        data = {
             "model": self.model,
-            "prompt": text,
+            "messages": [{"role": "user", "content": text}],
             "max_tokens": self.max_tokens,
             "temperature": self.temperature
         }
         response = requests.post(self.url, headers=self.headers, json=data)
+        response_json = response.json()
         
         if response.status_code == 200:
-            output = response.json()
-            if 'choices' in output and len(output['choices']) > 0:
-                self.context = output['choices'][0]['text']
-                print(self.context)
-                exec(self.context, globals())  # Berhati-hati dengan exec untuk alasan keamanan
+            if 'choices' in response_json and len(response_json['choices']) > 0:
+                output = response_json['choices'][0]['message']['content']
+                self.context = output
+                exec(output, globals())
             else:
-                print("Format respons tidak terduga:", output)
+                print("Respons tidak mengandung 'choices':", response_json)
         else:
             print(f"Error: {response.status_code}, {response.text}")
 
