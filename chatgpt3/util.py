@@ -1,8 +1,8 @@
 import requests
  
-class ChatGPT3:
+class ChatGPT3_5:
     """
-    class untuk akses ChatGPT3 via API
+    class untuk akses ChatGPT3.5 via API
     """
     def __init__(self, 
                  api_key,
@@ -20,7 +20,7 @@ class ChatGPT3:
             "Authorization": f"Bearer {api_key}",
         }
 
-    def ngobrol(self, text):
+    def ask(self, text):
         data = {
             "model": self.model,
             "messages": [{"role": "user", "content": text}],  # sesuaikan dengan format API chat terbaru
@@ -40,7 +40,7 @@ class ChatGPT3:
         else:
             print(f"Error: {response.status_code}, {response.text}")
 
-    def ngoding(self, text):
+    def code(self, text):
         if self.context is not None:
             text = f"dari kode : \n {self.context} \n " + text
         data = {
@@ -62,7 +62,7 @@ class ChatGPT3:
         else:
             print(f"Error: {response.status_code}, {response.text}")
 
-    def tampilkan_kode_terakhir(self):
+    def ask_last_code(self):
         print(self.context)
 
     def reset_context(self):
