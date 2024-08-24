@@ -1,5 +1,5 @@
 import requests
-
+ 
 class ChatGPT3:
     """
     class untuk akses ChatGPT3 via API
